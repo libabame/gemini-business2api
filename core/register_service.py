@@ -129,7 +129,10 @@ class RegisterService(BaseTaskService[RegisterTask]):
                 log_callback=log_cb,
             )
         else:
-            # undetected-chromedriver 引擎：仅有头模式可用
+            # undetected-chromedriver 引擎：无头模式反检测能力弱，强制使用有头模式
+            if headless:
+                log_cb("warning", "UC engine: headless mode not recommended, forcing headed mode")
+                headless = False
             automation = GeminiAutomationUC(
                 user_agent=self.user_agent,
                 proxy=config.basic.proxy,
